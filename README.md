@@ -21,9 +21,8 @@ and data:
     
 ### Requirements to run the project
 1.  Install Numpy
-
     pip install numpy
-2.  Install Pandas
+4.  Install Pandas
     pip install pandas
 3.  Install Matplotlib
     pip install matplotlib
