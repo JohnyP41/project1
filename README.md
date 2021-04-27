@@ -20,8 +20,8 @@ and data:
     data/hotel_data/hotel_data_original.csv.
     
 ### Requirements to run the project
-1.  Install Numpy
-    pip install numpy
+1.  Install Numpy:
+        pip install gym
 2.  Install Pandas
     pip install pandas
 3.  Install Matplotlib
