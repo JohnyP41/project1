@@ -14,3 +14,5 @@ data preprocessing code:
 and data:
 
     data/hotel_data/hotel_data_original.csv.
+
+The project is about data preparation and using this data in recommender system.
