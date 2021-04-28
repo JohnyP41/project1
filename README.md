@@ -43,4 +43,7 @@ and data:
         pip install html
 8.  Install defaultdict.
 
-        pip install defaultdict       
+        pip install defaultdict        
+9.  Install hyperopt.
+
+        pip install hyperopt   
