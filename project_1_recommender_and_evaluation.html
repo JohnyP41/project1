@@ -13076,7 +13076,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -13128,7 +13128,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;hotel_data&quot;</span><span class="p">)</span>
@@ -13392,15 +13392,13 @@ Design numerical user features based on user reservations. Code the following me
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
 <span class="k">def</span> <span class="nf">prepare_users_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">):</span>
-    <span class="n">users_df</span><span class="o">=</span><span class="n">interactions_df</span>
-    <span class="n">enc</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
-    <span class="n">user_features</span><span class="o">=</span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
-
+    <span class="n">users_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
+    <span class="n">user_features</span><span class="o">=</span><span class="n">users_df</span><span class="o">.</span><span class="n">columns</span>
     
     <span class="k">return</span> <span class="n">users_df</span><span class="p">,</span> <span class="n">user_features</span>
     
@@ -13426,13 +13424,18 @@ Design numerical user features based on user reservations. Code the following me
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[[1. 0. 0. ... 1. 0. 1.]
- [0. 1. 0. ... 0. 0. 1.]
- [0. 0. 1. ... 0. 1. 0.]
- ...
- [0. 0. 0. ... 1. 0. 1.]
- [0. 0. 0. ... 1. 0. 1.]
- [0. 0. 0. ... 1. 0. 1.]]
+<pre>Index([&#39;user_id&#39;, &#39;item_id&#39;, &#39;term_WinterVacation&#39;, &#39;term_Easter&#39;,
+       &#39;term_OffSeason&#39;, &#39;term_HighSeason&#39;, &#39;term_LowSeason&#39;,
+       &#39;term_MayLongWeekend&#39;, &#39;term_NewYear&#39;, &#39;term_Christmas&#39;,
+       &#39;length_of_stay_bucket_[0-1]&#39;, &#39;length_of_stay_bucket_[2-3]&#39;,
+       &#39;length_of_stay_bucket_[4-7]&#39;, &#39;length_of_stay_bucket_[8-inf]&#39;,
+       &#39;rate_plan_Standard&#39;, &#39;rate_plan_Nonref&#39;, &#39;room_segment_[0-160]&#39;,
+       &#39;room_segment_[160-260]&#39;, &#39;room_segment_[260-360]&#39;,
+       &#39;room_segment_[360-500]&#39;, &#39;room_segment_[500-900]&#39;,
+       &#39;n_people_bucket_[1-1]&#39;, &#39;n_people_bucket_[2-2]&#39;,
+       &#39;n_people_bucket_[3-4]&#39;, &#39;n_people_bucket_[5-inf]&#39;, &#39;weekend_stay_True&#39;,
+       &#39;weekend_stay_False&#39;],
+      dtype=&#39;object&#39;)
 </pre>
 </div>
 </div>
@@ -13450,12 +13453,31 @@ Design numerical user features based on user reservations. Code the following me
       <th></th>
       <th>user_id</th>
       <th>item_id</th>
-      <th>term</th>
-      <th>length_of_stay_bucket</th>
-      <th>rate_plan</th>
-      <th>room_segment</th>
-      <th>n_people_bucket</th>
-      <th>weekend_stay</th>
+      <th>term_WinterVacation</th>
+      <th>term_Easter</th>
+      <th>term_OffSeason</th>
+      <th>term_HighSeason</th>
+      <th>term_LowSeason</th>
+      <th>term_MayLongWeekend</th>
+      <th>term_NewYear</th>
+      <th>term_Christmas</th>
+      <th>length_of_stay_bucket_[0-1]</th>
+      <th>length_of_stay_bucket_[2-3]</th>
+      <th>length_of_stay_bucket_[4-7]</th>
+      <th>length_of_stay_bucket_[8-inf]</th>
+      <th>rate_plan_Standard</th>
+      <th>rate_plan_Nonref</th>
+      <th>room_segment_[0-160]</th>
+      <th>room_segment_[160-260]</th>
+      <th>room_segment_[260-360]</th>
+      <th>room_segment_[360-500]</th>
+      <th>room_segment_[500-900]</th>
+      <th>n_people_bucket_[1-1]</th>
+      <th>n_people_bucket_[2-2]</th>
+      <th>n_people_bucket_[3-4]</th>
+      <th>n_people_bucket_[5-inf]</th>
+      <th>weekend_stay_True</th>
+      <th>weekend_stay_False</th>
     </tr>
   </thead>
   <tbody>
@@ -13463,166 +13485,451 @@ Design numerical user features based on user reservations. Code the following me
       <th>0</th>
       <td>1</td>
       <td>0</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>52</th>
       <td>50</td>
       <td>40</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>57</th>
       <td>50</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>94</th>
       <td>1</td>
       <td>41</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[2-2]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>95</th>
       <td>1</td>
       <td>41</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[2-2]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>103</th>
       <td>96</td>
       <td>27</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[0-160]</td>
-      <td>[2-2]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>150</th>
       <td>115</td>
       <td>63</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>151</th>
       <td>115</td>
       <td>63</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>187</th>
       <td>115</td>
       <td>73</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>188</th>
       <td>115</td>
       <td>73</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>189</th>
       <td>115</td>
       <td>73</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>190</th>
       <td>115</td>
       <td>73</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>191</th>
       <td>115</td>
       <td>73</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>253</th>
       <td>115</td>
       <td>79</td>
-      <td>WinterVacation</td>
-      <td>[0-1]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[1-1]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>254</th>
       <td>115</td>
       <td>80</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[1-1]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -13647,12 +13954,12 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">prepare_items_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">):</span>
-    <span class="n">items_df</span><span class="o">=</span><span class="n">interactions_df</span>
-    <span class="n">item_features</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
+    <span class="n">items_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
+    <span class="n">item_features</span><span class="o">=</span><span class="n">items_df</span><span class="o">.</span><span class="n">columns</span>
     
     <span class="k">return</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">item_features</span>
 
@@ -13678,85 +13985,18 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>       user_id  item_id  term_WinterVacation  term_Easter  term_OffSeason  \
-0            1        0                    1            0               0   
-1            2        1                    1            0               0   
-2            3        2                    1            0               0   
-3            4        3                    1            0               0   
-4            5        4                    1            0               0   
-...        ...      ...                  ...          ...             ...   
-16097    14377       40                    0            0               1   
-16098    14384       40                    0            0               1   
-16099    14454       40                    0            0               1   
-16100    14460      753                    0            0               1   
-16101      706      180                    0            0               1   
-
-       term_HighSeason  term_LowSeason  term_MayLongWeekend  term_NewYear  \
-0                    0               0                    0             0   
-1                    0               0                    0             0   
-2                    0               0                    0             0   
-3                    0               0                    0             0   
-4                    0               0                    0             0   
-...                ...             ...                  ...           ...   
-16097                0               0                    0             0   
-16098                0               0                    0             0   
-16099                0               0                    0             0   
-16100                0               0                    0             0   
-16101                0               0                    0             0   
-
-       term_Christmas  ...  room_segment_[160-260]  room_segment_[260-360]  \
-0                   0  ...                       0                       1   
-1                   0  ...                       1                       0   
-2                   0  ...                       1                       0   
-3                   0  ...                       1                       0   
-4                   0  ...                       0                       0   
-...               ...  ...                     ...                     ...   
-16097               0  ...                       1                       0   
-16098               0  ...                       1                       0   
-16099               0  ...                       1                       0   
-16100               0  ...                       0                       0   
-16101               0  ...                       1                       0   
-
-       room_segment_[360-500]  room_segment_[500-900]  n_people_bucket_[1-1]  \
-0                           0                       0                      0   
-1                           0                       0                      0   
-2                           0                       0                      0   
-3                           0                       0                      0   
-4                           0                       0                      0   
-...                       ...                     ...                    ...   
-16097                       0                       0                      0   
-16098                       0                       0                      0   
-16099                       0                       0                      0   
-16100                       0                       0                      0   
-16101                       0                       0                      0   
-
-       n_people_bucket_[2-2]  n_people_bucket_[3-4]  n_people_bucket_[5-inf]  \
-0                          0                      0                        1   
-1                          0                      1                        0   
-2                          1                      0                        0   
-3                          0                      1                        0   
-4                          1                      0                        0   
-...                      ...                    ...                      ...   
-16097                      0                      0                        1   
-16098                      0                      0                        1   
-16099                      0                      0                        1   
-16100                      0                      0                        1   
-16101                      0                      0                        1   
-
-       weekend_stay_True  weekend_stay_False  
-0                      1                   0  
-1                      1                   0  
-2                      0                   1  
-3                      1                   0  
-4                      1                   0  
-...                  ...                 ...  
-16097                  1                   0  
-16098                  1                   0  
-16099                  1                   0  
-16100                  1                   0  
-16101                  1                   0  
-
-[16102 rows x 27 columns]
+<pre>Index([&#39;user_id&#39;, &#39;item_id&#39;, &#39;term_WinterVacation&#39;, &#39;term_Easter&#39;,
+       &#39;term_OffSeason&#39;, &#39;term_HighSeason&#39;, &#39;term_LowSeason&#39;,
+       &#39;term_MayLongWeekend&#39;, &#39;term_NewYear&#39;, &#39;term_Christmas&#39;,
+       &#39;length_of_stay_bucket_[0-1]&#39;, &#39;length_of_stay_bucket_[2-3]&#39;,
+       &#39;length_of_stay_bucket_[4-7]&#39;, &#39;length_of_stay_bucket_[8-inf]&#39;,
+       &#39;rate_plan_Standard&#39;, &#39;rate_plan_Nonref&#39;, &#39;room_segment_[0-160]&#39;,
+       &#39;room_segment_[160-260]&#39;, &#39;room_segment_[260-360]&#39;,
+       &#39;room_segment_[360-500]&#39;, &#39;room_segment_[500-900]&#39;,
+       &#39;n_people_bucket_[1-1]&#39;, &#39;n_people_bucket_[2-2]&#39;,
+       &#39;n_people_bucket_[3-4]&#39;, &#39;n_people_bucket_[5-inf]&#39;, &#39;weekend_stay_True&#39;,
+       &#39;weekend_stay_False&#39;],
+      dtype=&#39;object&#39;)
 </pre>
 </div>
 </div>
@@ -13774,12 +14014,31 @@ Code the prepare_items_df method which will be used in the recommender fit and r
       <th></th>
       <th>user_id</th>
       <th>item_id</th>
-      <th>term</th>
-      <th>length_of_stay_bucket</th>
-      <th>rate_plan</th>
-      <th>room_segment</th>
-      <th>n_people_bucket</th>
-      <th>weekend_stay</th>
+      <th>term_WinterVacation</th>
+      <th>term_Easter</th>
+      <th>term_OffSeason</th>
+      <th>term_HighSeason</th>
+      <th>term_LowSeason</th>
+      <th>term_MayLongWeekend</th>
+      <th>term_NewYear</th>
+      <th>term_Christmas</th>
+      <th>length_of_stay_bucket_[0-1]</th>
+      <th>length_of_stay_bucket_[2-3]</th>
+      <th>length_of_stay_bucket_[4-7]</th>
+      <th>length_of_stay_bucket_[8-inf]</th>
+      <th>rate_plan_Standard</th>
+      <th>rate_plan_Nonref</th>
+      <th>room_segment_[0-160]</th>
+      <th>room_segment_[160-260]</th>
+      <th>room_segment_[260-360]</th>
+      <th>room_segment_[360-500]</th>
+      <th>room_segment_[500-900]</th>
+      <th>n_people_bucket_[1-1]</th>
+      <th>n_people_bucket_[2-2]</th>
+      <th>n_people_bucket_[3-4]</th>
+      <th>n_people_bucket_[5-inf]</th>
+      <th>weekend_stay_True</th>
+      <th>weekend_stay_False</th>
     </tr>
   </thead>
   <tbody>
@@ -13787,166 +14046,451 @@ Code the prepare_items_df method which will be used in the recommender fit and r
       <th>0</th>
       <td>1</td>
       <td>0</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2</td>
       <td>1</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[3-4]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>3</td>
       <td>2</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[2-2]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>3</th>
       <td>4</td>
       <td>3</td>
-      <td>WinterVacation</td>
-      <td>[4-7]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[3-4]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>5</td>
       <td>4</td>
-      <td>WinterVacation</td>
-      <td>[4-7]</td>
-      <td>Standard</td>
-      <td>[0-160]</td>
-      <td>[2-2]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>5</th>
       <td>6</td>
       <td>5</td>
-      <td>Easter</td>
-      <td>[4-7]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>6</th>
       <td>7</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>54</th>
       <td>52</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>57</th>
       <td>50</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>61</th>
       <td>58</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>73</th>
       <td>70</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>98</th>
       <td>91</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>108</th>
       <td>101</td>
       <td>6</td>
-      <td>OffSeason</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[260-360]</td>
-      <td>[5-inf]</td>
-      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>122</th>
       <td>113</td>
       <td>2</td>
-      <td>WinterVacation</td>
-      <td>[2-3]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[2-2]</td>
-      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>123</th>
       <td>114</td>
       <td>3</td>
-      <td>WinterVacation</td>
-      <td>[4-7]</td>
-      <td>Standard</td>
-      <td>[160-260]</td>
-      <td>[3-4]</td>
-      <td>True</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -13988,7 +14532,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
@@ -14237,7 +14781,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">items_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">base_item_features</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
@@ -14271,7 +14815,6 @@ Code the content-based recommender. User features should be calculated within th
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Recommender method</span>
 
 <span class="n">recommendations</span> <span class="o">=</span> <span class="n">cb_user_item_recommender</span><span class="o">.</span><span class="n">recommend</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]),</span> <span class="n">interactions_df</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-
 <span class="n">recommendations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">recommendations</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">recommendations</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
 </pre></div>
@@ -14290,7 +14833,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">evaluation_and_testing.testing</span> <span class="kn">import</span> <span class="n">evaluate_train_test_split_implicit</span>
@@ -14305,7 +14848,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">hyperopt</span> <span class="kn">import</span> <span class="n">hp</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">tpe</span><span class="p">,</span> <span class="n">Trials</span>
@@ -14385,7 +14928,7 @@ Tune your models using the code below. You only need to put the class name of yo
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="n">best_param_set</span> <span class="o">=</span> <span class="n">tune_recommender</span><span class="p">(</span><span class="n">LinearRegressionCBUIRecommender</span><span class="p">,</span> <span class="n">interactions_df</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span>
@@ -14406,7 +14949,7 @@ Tune your models using the code below. You only need to put the class name of yo
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
     <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">loguniform</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.01</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">100.0</span><span class="p">))</span>
 <span class="p">}</span>
 
@@ -14428,7 +14971,7 @@ Tune your models using the code below. You only need to put the class name of yo
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
     <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -14454,7 +14997,7 @@ Tune your models using the code below. You only need to put the class name of yo
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># This tuning may take around 12 hours</span>
 
 <span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_neg_per_pos&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
     <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="n">hp</span><span class="o">.</span><span class="n">quniform</span><span class="p">(</span><span class="s1">&#39;min_samples_split&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -14535,6 +15078,32 @@ Run the final evaluation of your recommender and present its results against the
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tts_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">linear_cbui_tts_results</span><span class="p">,</span> <span class="n">amazon_tts_results</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">tts_results</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
