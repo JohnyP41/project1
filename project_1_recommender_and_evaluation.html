@@ -13351,7 +13351,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
@@ -13898,7 +13898,7 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">prepare_items_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">):</span>
@@ -14451,7 +14451,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
@@ -14520,8 +14520,13 @@ Code the content-based recommender. User features should be calculated within th
             <span class="p">[</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">negative_interactions</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="s1">&#39;interacted&#39;</span><span class="p">])])</span>
         
         <span class="c1"># Get the input data for the model</span>
-        <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">users_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">])</span>
-        <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span>
+        <span class="k">del</span> <span class="n">items_df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;term&#39;</span><span class="p">:])</span>
+        <span class="n">items_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
+        <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">users_df</span><span class="p">)</span>
+        <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">items_df</span><span class="p">)</span>
         
         <span class="n">x</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">user_features</span> <span class="o">+</span> <span class="n">item_features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="p">[</span><span class="s1">&#39;interacted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -14695,7 +14700,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">items_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">base_item_features</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
@@ -14708,7 +14713,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Fit method</span>
@@ -14720,70 +14725,10 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-17-07e03268d827&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># Fit method</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> cb_user_item_recommender <span class="ansi-blue-fg">=</span> RandomForestCBUIRecommender<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>cb_user_item_recommender<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, interactions_df, users_df, items_df)</span>
-<span class="ansi-green-intense-fg ansi-bold">     66</span>         <span class="ansi-red-fg"># Get the input data for the model</span>
-<span class="ansi-green-intense-fg ansi-bold">     67</span>         interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> users_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 68</span><span class="ansi-red-fg">         </span>interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     69</span> 
-<span class="ansi-green-intense-fg ansi-bold">     70</span>         x <span class="ansi-blue-fg">=</span> interactions_df<span class="ansi-blue-fg">.</span>loc<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> user_features <span class="ansi-blue-fg">+</span> item_features<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>values
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
-<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
-</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">    625</span>             self<span class="ansi-blue-fg">.</span>right_join_keys<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    626</span>             self<span class="ansi-blue-fg">.</span>join_names<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-fg">--&gt; 627</span><span class="ansi-red-fg">         ) = self._get_merge_keys()
-</span><span class="ansi-green-intense-fg ansi-bold">    628</span> 
-<span class="ansi-green-intense-fg ansi-bold">    629</span>         <span class="ansi-red-fg"># validate the merge keys dtypes. We may need to coerce</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_get_merge_keys</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    981</span>                     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_rkey<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    982</span>                         <span class="ansi-green-fg">if</span> rk <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 983</span><span class="ansi-red-fg">                             </span>right_keys<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>right<span class="ansi-blue-fg">.</span>_get_label_or_level_values<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    984</span>                         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    985</span>                             <span class="ansi-red-fg"># work-around for merge_asof(right_index=True)</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py</span> in <span class="ansi-cyan-fg">_get_label_or_level_values</span><span class="ansi-blue-fg">(self, key, axis)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1706</span> 
-<span class="ansi-green-intense-fg ansi-bold">   1707</span>             label_axis_name <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;column&#34;</span> <span class="ansi-green-fg">if</span> axis <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span> <span class="ansi-green-fg">else</span> <span class="ansi-blue-fg">&#34;index&#34;</span>
-<span class="ansi-green-fg">-&gt; 1708</span><span class="ansi-red-fg">             raise ValueError(
-</span><span class="ansi-green-intense-fg ansi-bold">   1709</span>                 (
-<span class="ansi-green-intense-fg ansi-bold">   1710</span>                     <span class="ansi-blue-fg">f&#34;The {label_axis_name} label &#39;{key}&#39; &#34;</span>
-
-<span class="ansi-red-fg">ValueError</span>: The column label &#39;item_id&#39; is not unique.</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Recommender method</span>
@@ -14797,68 +14742,6 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">MergeError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-18-9ffc5d3e5f45&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># Recommender method</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> 
-<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>recommendations <span class="ansi-blue-fg">=</span> cb_user_item_recommender<span class="ansi-blue-fg">.</span>recommend<span class="ansi-blue-fg">(</span>pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> columns<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> interactions_df<span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> recommendations <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>recommendations<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">,</span> how<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;left&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> display<span class="ansi-blue-fg">(</span>HTML<span class="ansi-blue-fg">(</span>recommendations<span class="ansi-blue-fg">.</span>to_html<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">recommend</span><span class="ansi-blue-fg">(self, users_df, items_df, n_recommendations)</span>
-<span class="ansi-green-intense-fg ansi-bold">    102</span>         <span class="ansi-green-fg">for</span> ix<span class="ansi-blue-fg">,</span> user <span class="ansi-green-fg">in</span> users_df<span class="ansi-blue-fg">.</span>iterrows<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    103</span> 
-<span class="ansi-green-fg">--&gt; 104</span><span class="ansi-red-fg">             </span>users_df<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>items_df<span class="ansi-blue-fg">,</span> how<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;cross&#39;</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span>             <span class="ansi-red-fg"># Create a Carthesian product of users from users_df and items from items_df</span>
-<span class="ansi-green-intense-fg ansi-bold">    106</span> 
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/frame.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(self, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">   7282</span>         <span class="ansi-green-fg">from</span> pandas<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>reshape<span class="ansi-blue-fg">.</span>merge <span class="ansi-green-fg">import</span> merge
-<span class="ansi-green-intense-fg ansi-bold">   7283</span> 
-<span class="ansi-green-fg">-&gt; 7284</span><span class="ansi-red-fg">         return merge(
-</span><span class="ansi-green-intense-fg ansi-bold">   7285</span>             self<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   7286</span>             right<span class="ansi-blue-fg">,</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
-<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
-</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">    618</span>             warnings<span class="ansi-blue-fg">.</span>warn<span class="ansi-blue-fg">(</span>msg<span class="ansi-blue-fg">,</span> UserWarning<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    619</span> 
-<span class="ansi-green-fg">--&gt; 620</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>_validate_specification<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    621</span> 
-<span class="ansi-green-intense-fg ansi-bold">    622</span>         <span class="ansi-red-fg"># note this function has side effects</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_validate_specification</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1189</span>                 common_cols <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>left<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">.</span>intersection<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>right<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1190</span>                 <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>common_cols<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">-&gt; 1191</span><span class="ansi-red-fg">                     raise MergeError(
-</span><span class="ansi-green-intense-fg ansi-bold">   1192</span>                         <span class="ansi-blue-fg">&#34;No common columns to perform merge on. &#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">   1193</span>                         <span class="ansi-blue-fg">&#34;Merge options: left_on={lon}, right_on={ron}, &#34;</span>
-
-<span class="ansi-red-fg">MergeError</span>: No common columns to perform merge on. Merge options: left_on=None, right_on=None, left_index=False, right_index=False</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -14869,7 +14752,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">evaluation_and_testing.testing</span> <span class="kn">import</span> <span class="n">evaluate_train_test_split_implicit</span>
@@ -14884,7 +14767,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">hyperopt</span> <span class="kn">import</span> <span class="n">hp</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">tpe</span><span class="p">,</span> <span class="n">Trials</span>
@@ -14960,7 +14843,7 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -14978,94 +14861,10 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/10 [00:00&lt;?, ?trial/s, best loss=?]</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>job exception: The column label &#39;item_id&#39; is not unique.
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/10 [00:00&lt;?, ?trial/s, best loss=?]
-Best parameters:
-None
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Traceback (most recent call last):
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
-    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
-    return trials.fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
-    return fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
-    rval.exhaust()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
-    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
-    self.serial_evaluate()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
-    result = self.domain.evaluate(spec, ctrl)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
-    rval = self.fn(pyll_rval)
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
-    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
-  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
-    recommender.fit(interactions_df_train, None, items_df)
-  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
-    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
-    op = _MergeOperation(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
-    ) = self._get_merge_keys()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
-    right_keys.append(right._get_label_or_level_values(rk))
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
-    raise ValueError(
-ValueError: The column label &#39;item_id&#39; is not unique.
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -15084,94 +14883,10 @@ ValueError: The column label &#39;item_id&#39; is not unique.
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>job exception: The column label &#39;item_id&#39; is not unique.
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]
-Best parameters:
-None
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Traceback (most recent call last):
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
-    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
-    return trials.fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
-    return fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
-    rval.exhaust()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
-    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
-    self.serial_evaluate()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
-    result = self.domain.evaluate(spec, ctrl)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
-    rval = self.fn(pyll_rval)
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
-    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
-  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
-    recommender.fit(interactions_df_train, None, items_df)
-  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
-    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
-    op = _MergeOperation(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
-    ) = self._get_merge_keys()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
-    right_keys.append(right._get_label_or_level_values(rk))
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
-    raise ValueError(
-ValueError: The column label &#39;item_id&#39; is not unique.
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -15192,94 +14907,10 @@ ValueError: The column label &#39;item_id&#39; is not unique.
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>job exception: The column label &#39;item_id&#39; is not unique.
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]
-Best parameters:
-None
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Traceback (most recent call last):
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
-    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
-    return trials.fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
-    return fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
-    rval.exhaust()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
-    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
-    self.serial_evaluate()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
-    result = self.domain.evaluate(spec, ctrl)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
-    rval = self.fn(pyll_rval)
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
-    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
-  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
-    recommender.fit(interactions_df_train, None, items_df)
-  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
-    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
-    op = _MergeOperation(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
-    ) = self._get_merge_keys()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
-    right_keys.append(right._get_label_or_level_values(rk))
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
-    raise ValueError(
-ValueError: The column label &#39;item_id&#39; is not unique.
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># This tuning may take around 12 hours</span>
@@ -15303,90 +14934,6 @@ ValueError: The column label &#39;item_id&#39; is not unique.
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/300 [00:00&lt;?, ?trial/s, best loss=?]</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>job exception: The column label &#39;item_id&#39; is not unique.
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>  0%|          | 0/300 [00:00&lt;?, ?trial/s, best loss=?]
-Best parameters:
-None
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>Traceback (most recent call last):
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
-    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
-    return trials.fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
-    return fmin(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
-    rval.exhaust()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
-    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
-    self.serial_evaluate()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
-    result = self.domain.evaluate(spec, ctrl)
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
-    rval = self.fn(pyll_rval)
-  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
-    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
-  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
-    recommender.fit(interactions_df_train, None, items_df)
-  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
-    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
-    op = _MergeOperation(
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
-    ) = self._get_merge_keys()
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
-    right_keys.append(right._get_label_or_level_values(rk))
-  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
-    raise ValueError(
-ValueError: The column label &#39;item_id&#39; is not unique.
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -15399,7 +14946,7 @@ Run the final evaluation of your recommender and present its results against the
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cb_user_item_recommender</span> <span class="o">=</span> <span class="n">LinearRegressionCBUIRecommender</span><span class="p">(</span>
@@ -15416,75 +14963,6 @@ Run the final evaluation of your recommender and present its results against the
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-25-89e69fdf413f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> 
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-red-fg"># Give the name of your recommender in the line below</span>
-<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> linear_cbui_tts_results = [[&#39;LinearRegressionCBUIRecommender&#39;] + list(evaluate_train_test_split_implicit(
-</span><span class="ansi-green-intense-fg ansi-bold">      6</span>     cb_user_item_recommender, interactions_df, items_df))]
-<span class="ansi-green-intense-fg ansi-bold">      7</span> 
-
-<span class="ansi-green-fg">~/Pulpit/REK/project1/evaluation_and_testing/testing.py</span> in <span class="ansi-cyan-fg">evaluate_train_test_split_implicit</span><span class="ansi-blue-fg">(recommender, interactions_df, items_df, seed)</span>
-<span class="ansi-green-intense-fg ansi-bold">     91</span>     <span class="ansi-red-fg"># Train the recommender</span>
-<span class="ansi-green-intense-fg ansi-bold">     92</span> 
-<span class="ansi-green-fg">---&gt; 93</span><span class="ansi-red-fg">     </span>recommender<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>interactions_df_train<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     94</span> 
-<span class="ansi-green-intense-fg ansi-bold">     95</span>     <span class="ansi-red-fg"># Make recommendations for each user in the test set and calculate the metric</span>
-
-<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, interactions_df, users_df, items_df)</span>
-<span class="ansi-green-intense-fg ansi-bold">     66</span>         <span class="ansi-red-fg"># Get the input data for the model</span>
-<span class="ansi-green-intense-fg ansi-bold">     67</span>         interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> users_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">---&gt; 68</span><span class="ansi-red-fg">         </span>interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     69</span> 
-<span class="ansi-green-intense-fg ansi-bold">     70</span>         x <span class="ansi-blue-fg">=</span> interactions_df<span class="ansi-blue-fg">.</span>loc<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> user_features <span class="ansi-blue-fg">+</span> item_features<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>values
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
-<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
-</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
-<span class="ansi-green-intense-fg ansi-bold">    625</span>             self<span class="ansi-blue-fg">.</span>right_join_keys<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    626</span>             self<span class="ansi-blue-fg">.</span>join_names<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-fg">--&gt; 627</span><span class="ansi-red-fg">         ) = self._get_merge_keys()
-</span><span class="ansi-green-intense-fg ansi-bold">    628</span> 
-<span class="ansi-green-intense-fg ansi-bold">    629</span>         <span class="ansi-red-fg"># validate the merge keys dtypes. We may need to coerce</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_get_merge_keys</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    981</span>                     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_rkey<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    982</span>                         <span class="ansi-green-fg">if</span> rk <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 983</span><span class="ansi-red-fg">                             </span>right_keys<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>right<span class="ansi-blue-fg">.</span>_get_label_or_level_values<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    984</span>                         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    985</span>                             <span class="ansi-red-fg"># work-around for merge_asof(right_index=True)</span>
-
-<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py</span> in <span class="ansi-cyan-fg">_get_label_or_level_values</span><span class="ansi-blue-fg">(self, key, axis)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1706</span> 
-<span class="ansi-green-intense-fg ansi-bold">   1707</span>             label_axis_name <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;column&#34;</span> <span class="ansi-green-fg">if</span> axis <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span> <span class="ansi-green-fg">else</span> <span class="ansi-blue-fg">&#34;index&#34;</span>
-<span class="ansi-green-fg">-&gt; 1708</span><span class="ansi-red-fg">             raise ValueError(
-</span><span class="ansi-green-intense-fg ansi-bold">   1709</span>                 (
-<span class="ansi-green-intense-fg ansi-bold">   1710</span>                     <span class="ansi-blue-fg">f&#34;The {label_axis_name} label &#39;{key}&#39; &#34;</span>
-
-<span class="ansi-red-fg">ValueError</span>: The column label &#39;item_id&#39; is not unique.</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -15519,6 +14997,19 @@ Run the final evaluation of your recommender and present its results against the
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tts_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">linear_cbui_tts_results</span><span class="p">,</span> <span class="n">amazon_tts_results</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">tts_results</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
