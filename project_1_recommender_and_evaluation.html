@@ -13076,7 +13076,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -13099,25 +13099,6 @@ div#notebook {
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The autoreload extension is already loaded. To reload it, use:
-  %reload_ext autoreload
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -13128,7 +13109,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;hotel_data&quot;</span><span class="p">)</span>
@@ -13368,37 +13349,21 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Define-user-features-based-on-reservations">Define user features based on reservations<a class="anchor-link" href="#Define-user-features-based-on-reservations">&#182;</a></h1><p>The content-based recommenders will be forecasting the probability of interaction between user and item based on user features vector and item features vector:</p>
-<center>
-$$
-    r_{u, i} = f(user\_features, item\_features)
-$$
-</center><p><span style="color:red"><font size="4">**Task:**</font></span><br> 
-Design numerical user features based on user reservations. Code the following method which for a given interactions DataFrame (it will be used in the fit method of the recommender) returns a DataFrame with user_id and user features as well as a list with names of user features (this will be important to select the right columns for an ML algorithm). Remember to name the columns differently than item features which you will create in the next task. Validate your features on users with several interactions (sample user ids are already given below).</p>
-<p>Ideas for user features:</p>
-<ul>
-<li>Find the vector of most popular feature values from all user reservations and encode every feature with one-hot encoding.</li>
-<li>For every reservation feature calculate the probability distribution of its values among all user's reservations.</li>
-<li>For numerical buckets (length_of_stay, room_segment, n_people) you can calculate the average value for every user from their reservations (you will have to map the buckets back to numerical values before averaging them).</li>
-</ul>
-<p>Remember that you will have to select the best features (with the highest explanatory power). Using all above features at once would make the number of variables too large for this dataset and would also introduce too much correlations between features.</p>
-<p>You can also prepare several version of the prepare_users_df method and test which works best in your recommender.</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
 <span class="k">def</span> <span class="nf">prepare_users_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">):</span>
-    <span class="n">users_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
-    <span class="n">user_features</span><span class="o">=</span><span class="n">users_df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+    <span class="n">enc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;term&#39;</span><span class="p">:])</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">enc</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;term&#39;</span><span class="p">:])</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">users_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
+    <span class="n">user_features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">users_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">users_df</span><span class="p">,</span> <span class="n">user_features</span>
     
@@ -13424,18 +13389,7 @@ Design numerical user features based on user reservations. Code the following me
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Index([&#39;user_id&#39;, &#39;item_id&#39;, &#39;term_WinterVacation&#39;, &#39;term_Easter&#39;,
-       &#39;term_OffSeason&#39;, &#39;term_HighSeason&#39;, &#39;term_LowSeason&#39;,
-       &#39;term_MayLongWeekend&#39;, &#39;term_NewYear&#39;, &#39;term_Christmas&#39;,
-       &#39;length_of_stay_bucket_[0-1]&#39;, &#39;length_of_stay_bucket_[2-3]&#39;,
-       &#39;length_of_stay_bucket_[4-7]&#39;, &#39;length_of_stay_bucket_[8-inf]&#39;,
-       &#39;rate_plan_Standard&#39;, &#39;rate_plan_Nonref&#39;, &#39;room_segment_[0-160]&#39;,
-       &#39;room_segment_[160-260]&#39;, &#39;room_segment_[260-360]&#39;,
-       &#39;room_segment_[360-500]&#39;, &#39;room_segment_[500-900]&#39;,
-       &#39;n_people_bucket_[1-1]&#39;, &#39;n_people_bucket_[2-2]&#39;,
-       &#39;n_people_bucket_[3-4]&#39;, &#39;n_people_bucket_[5-inf]&#39;, &#39;weekend_stay_True&#39;,
-       &#39;weekend_stay_False&#39;],
-      dtype=&#39;object&#39;)
+<pre>[&#39;user_id&#39;, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 </pre>
 </div>
 </div>
@@ -13452,484 +13406,452 @@ Design numerical user features based on user reservations. Code the following me
     <tr style="text-align: right;">
       <th></th>
       <th>user_id</th>
-      <th>item_id</th>
-      <th>term_WinterVacation</th>
-      <th>term_Easter</th>
-      <th>term_OffSeason</th>
-      <th>term_HighSeason</th>
-      <th>term_LowSeason</th>
-      <th>term_MayLongWeekend</th>
-      <th>term_NewYear</th>
-      <th>term_Christmas</th>
-      <th>length_of_stay_bucket_[0-1]</th>
-      <th>length_of_stay_bucket_[2-3]</th>
-      <th>length_of_stay_bucket_[4-7]</th>
-      <th>length_of_stay_bucket_[8-inf]</th>
-      <th>rate_plan_Standard</th>
-      <th>rate_plan_Nonref</th>
-      <th>room_segment_[0-160]</th>
-      <th>room_segment_[160-260]</th>
-      <th>room_segment_[260-360]</th>
-      <th>room_segment_[360-500]</th>
-      <th>room_segment_[500-900]</th>
-      <th>n_people_bucket_[1-1]</th>
-      <th>n_people_bucket_[2-2]</th>
-      <th>n_people_bucket_[3-4]</th>
-      <th>n_people_bucket_[5-inf]</th>
-      <th>weekend_stay_True</th>
-      <th>weekend_stay_False</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+      <th>14</th>
+      <th>15</th>
+      <th>16</th>
+      <th>17</th>
+      <th>18</th>
+      <th>19</th>
+      <th>20</th>
+      <th>21</th>
+      <th>22</th>
+      <th>23</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>52</th>
-      <td>50</td>
-      <td>40</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>50.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>57</th>
-      <td>50</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>50.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>94</th>
-      <td>1</td>
-      <td>41</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>95</th>
-      <td>1</td>
-      <td>41</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>103</th>
-      <td>96</td>
-      <td>27</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>96.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>150</th>
-      <td>115</td>
-      <td>63</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>151</th>
-      <td>115</td>
-      <td>63</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>187</th>
-      <td>115</td>
-      <td>73</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>188</th>
-      <td>115</td>
-      <td>73</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>189</th>
-      <td>115</td>
-      <td>73</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>190</th>
-      <td>115</td>
-      <td>73</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>191</th>
-      <td>115</td>
-      <td>73</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>253</th>
-      <td>115</td>
-      <td>79</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>254</th>
-      <td>115</td>
-      <td>80</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>115.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
@@ -13944,6 +13866,28 @@ Design numerical user features based on user reservations. Code the following me
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Define-user-features-based-on-reservations">Define user features based on reservations<a class="anchor-link" href="#Define-user-features-based-on-reservations">&#182;</a></h1><p>The content-based recommenders will be forecasting the probability of interaction between user and item based on user features vector and item features vector:</p>
+<center>
+$$
+    r_{u, i} = f(user\_features, item\_features)
+$$
+</center><p><span style="color:red"><font size="4">**Task:**</font></span><br> 
+Design numerical user features based on user reservations. Code the following method which for a given interactions DataFrame (it will be used in the fit method of the recommender) returns a DataFrame with user_id and user features as well as a list with names of user features (this will be important to select the right columns for an ML algorithm). Remember to name the columns differently than item features which you will create in the next task. Validate your features on users with several interactions (sample user ids are already given below).</p>
+<p>Ideas for user features:</p>
+<ul>
+<li>Find the vector of most popular feature values from all user reservations and encode every feature with one-hot encoding.</li>
+<li>For every reservation feature calculate the probability distribution of its values among all user's reservations.</li>
+<li>For numerical buckets (length_of_stay, room_segment, n_people) you can calculate the average value for every user from their reservations (you will have to map the buckets back to numerical values before averaging them).</li>
+</ul>
+<p>Remember that you will have to select the best features (with the highest explanatory power). Using all above features at once would make the number of variables too large for this dataset and would also introduce too much correlations between features.</p>
+<p>You can also prepare several version of the prepare_users_df method and test which works best in your recommender.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Prepare-numerical-item-features">Prepare numerical item features<a class="anchor-link" href="#Prepare-numerical-item-features">&#182;</a></h1><p><span style="color:red"><font size="4">**Task:**</font></span><br> 
 Code the prepare_items_df method which will be used in the recommender fit and recommend methods to map items to numerical features. This method should take the interactions_df DataFrame as input and return a DataFrame containing one record per item_id with item_id column and numerical item feature columns.</p>
 <p>You can try turning all item features into on-hot representations. You can use the get_dummies method from pandas. It will return the same columns on any dataset of interactions because of the categorical variables with all possible values have been defined in the second cell in this notebook.</p>
@@ -13954,12 +13898,15 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">prepare_items_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">):</span>
-    <span class="n">items_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
-    <span class="n">item_features</span><span class="o">=</span><span class="n">items_df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">to_frame</span><span class="p">()</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;term&#39;</span><span class="p">:])</span>
+    <span class="n">items_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span>
+    <span class="n">item_features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">items_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">item_features</span>
 
@@ -13967,7 +13914,6 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 <span class="n">items_df</span><span class="p">,</span> <span class="n">item_features</span> <span class="o">=</span> <span class="n">prepare_items_df</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">item_features</span><span class="p">)</span>
-
 <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">items_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">items_df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">to_html</span><span class="p">()))</span>
 </pre></div>
 
@@ -13985,18 +13931,7 @@ Code the prepare_items_df method which will be used in the recommender fit and r
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Index([&#39;user_id&#39;, &#39;item_id&#39;, &#39;term_WinterVacation&#39;, &#39;term_Easter&#39;,
-       &#39;term_OffSeason&#39;, &#39;term_HighSeason&#39;, &#39;term_LowSeason&#39;,
-       &#39;term_MayLongWeekend&#39;, &#39;term_NewYear&#39;, &#39;term_Christmas&#39;,
-       &#39;length_of_stay_bucket_[0-1]&#39;, &#39;length_of_stay_bucket_[2-3]&#39;,
-       &#39;length_of_stay_bucket_[4-7]&#39;, &#39;length_of_stay_bucket_[8-inf]&#39;,
-       &#39;rate_plan_Standard&#39;, &#39;rate_plan_Nonref&#39;, &#39;room_segment_[0-160]&#39;,
-       &#39;room_segment_[160-260]&#39;, &#39;room_segment_[260-360]&#39;,
-       &#39;room_segment_[360-500]&#39;, &#39;room_segment_[500-900]&#39;,
-       &#39;n_people_bucket_[1-1]&#39;, &#39;n_people_bucket_[2-2]&#39;,
-       &#39;n_people_bucket_[3-4]&#39;, &#39;n_people_bucket_[5-inf]&#39;, &#39;weekend_stay_True&#39;,
-       &#39;weekend_stay_False&#39;],
-      dtype=&#39;object&#39;)
+<pre>[&#39;item_id&#39;, &#39;term_WinterVacation&#39;, &#39;term_Easter&#39;, &#39;term_OffSeason&#39;, &#39;term_HighSeason&#39;, &#39;term_LowSeason&#39;, &#39;term_MayLongWeekend&#39;, &#39;term_NewYear&#39;, &#39;term_Christmas&#39;, &#39;length_of_stay_bucket_[0-1]&#39;, &#39;length_of_stay_bucket_[2-3]&#39;, &#39;length_of_stay_bucket_[4-7]&#39;, &#39;length_of_stay_bucket_[8-inf]&#39;, &#39;rate_plan_Standard&#39;, &#39;rate_plan_Nonref&#39;, &#39;room_segment_[0-160]&#39;, &#39;room_segment_[160-260]&#39;, &#39;room_segment_[260-360]&#39;, &#39;room_segment_[360-500]&#39;, &#39;room_segment_[500-900]&#39;, &#39;n_people_bucket_[1-1]&#39;, &#39;n_people_bucket_[2-2]&#39;, &#39;n_people_bucket_[3-4]&#39;, &#39;n_people_bucket_[5-inf]&#39;, &#39;weekend_stay_True&#39;, &#39;weekend_stay_False&#39;]
 </pre>
 </div>
 </div>
@@ -14012,7 +13947,6 @@ Code the prepare_items_df method which will be used in the recommender fit and r
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>user_id</th>
       <th>item_id</th>
       <th>term_WinterVacation</th>
       <th>term_Easter</th>
@@ -14044,453 +13978,438 @@ Code the prepare_items_df method which will be used in the recommender fit and r
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>2</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>3</td>
-      <td>2</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>2.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>4</td>
-      <td>3</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>3.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>5</td>
-      <td>4</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>4.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>6</td>
-      <td>5</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>5.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>7</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>54</th>
-      <td>52</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>57</th>
-      <td>50</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>61</th>
-      <td>58</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>73</th>
-      <td>70</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>98</th>
-      <td>91</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>108</th>
-      <td>101</td>
-      <td>6</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
+      <td>6.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>122</th>
-      <td>113</td>
-      <td>2</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>2.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
       <th>123</th>
-      <td>114</td>
-      <td>3</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>3.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
@@ -14532,7 +14451,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
@@ -14588,13 +14507,9 @@ Code the content-based recommender. User features should be calculated within th
         <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">]]</span>
         
         <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;interacted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-        
-        <span class="n">negative_interactions</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="nb">filter</span> <span class="o">=</span> <span class="n">interactions</span><span class="p">[</span><span class="s1">&#39;interacted&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span>
-        <span class="n">df</span><span class="o">=</span><span class="n">interactions</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">filter</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="n">user_id</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span>
-        <span class="n">item_id</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span>
-        <span class="n">negative_interactions</span><span class="o">=</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="n">item_id</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">negative_interactions</span> <span class="o">=</span> <span class="n">interactions_df</span>
+        <span class="n">negative_interactions</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;interacted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># Generate tuples (user_id, item_id, 0) for pairs (user_id, item_id) which do not</span>
         <span class="c1"># appear in the interactions_df and add those tuples to the list negative_interactions.</span>
         <span class="c1"># Generate self.n_neg_per_pos * len(interactions_df) negative interactions </span>
@@ -14605,7 +14520,6 @@ Code the content-based recommender. User features should be calculated within th
             <span class="p">[</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">negative_interactions</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;item_id&#39;</span><span class="p">,</span> <span class="s1">&#39;interacted&#39;</span><span class="p">])])</span>
         
         <span class="c1"># Get the input data for the model</span>
-        
         <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">users_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">])</span>
         <span class="n">interactions_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">interactions_df</span><span class="p">,</span> <span class="n">items_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">])</span>
         
@@ -14781,7 +14695,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">items_df</span> <span class="o">=</span> <span class="n">interactions_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;item_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">base_item_features</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
@@ -14794,7 +14708,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Fit method</span>
@@ -14806,10 +14720,70 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-17-07e03268d827&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># Fit method</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> cb_user_item_recommender <span class="ansi-blue-fg">=</span> RandomForestCBUIRecommender<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>cb_user_item_recommender<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, interactions_df, users_df, items_df)</span>
+<span class="ansi-green-intense-fg ansi-bold">     66</span>         <span class="ansi-red-fg"># Get the input data for the model</span>
+<span class="ansi-green-intense-fg ansi-bold">     67</span>         interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> users_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 68</span><span class="ansi-red-fg">         </span>interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     69</span> 
+<span class="ansi-green-intense-fg ansi-bold">     70</span>         x <span class="ansi-blue-fg">=</span> interactions_df<span class="ansi-blue-fg">.</span>loc<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> user_features <span class="ansi-blue-fg">+</span> item_features<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>values
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
+<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
+</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">    625</span>             self<span class="ansi-blue-fg">.</span>right_join_keys<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    626</span>             self<span class="ansi-blue-fg">.</span>join_names<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">--&gt; 627</span><span class="ansi-red-fg">         ) = self._get_merge_keys()
+</span><span class="ansi-green-intense-fg ansi-bold">    628</span> 
+<span class="ansi-green-intense-fg ansi-bold">    629</span>         <span class="ansi-red-fg"># validate the merge keys dtypes. We may need to coerce</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_get_merge_keys</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    981</span>                     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_rkey<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    982</span>                         <span class="ansi-green-fg">if</span> rk <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 983</span><span class="ansi-red-fg">                             </span>right_keys<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>right<span class="ansi-blue-fg">.</span>_get_label_or_level_values<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    984</span>                         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    985</span>                             <span class="ansi-red-fg"># work-around for merge_asof(right_index=True)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py</span> in <span class="ansi-cyan-fg">_get_label_or_level_values</span><span class="ansi-blue-fg">(self, key, axis)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1706</span> 
+<span class="ansi-green-intense-fg ansi-bold">   1707</span>             label_axis_name <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;column&#34;</span> <span class="ansi-green-fg">if</span> axis <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span> <span class="ansi-green-fg">else</span> <span class="ansi-blue-fg">&#34;index&#34;</span>
+<span class="ansi-green-fg">-&gt; 1708</span><span class="ansi-red-fg">             raise ValueError(
+</span><span class="ansi-green-intense-fg ansi-bold">   1709</span>                 (
+<span class="ansi-green-intense-fg ansi-bold">   1710</span>                     <span class="ansi-blue-fg">f&#34;The {label_axis_name} label &#39;{key}&#39; &#34;</span>
+
+<span class="ansi-red-fg">ValueError</span>: The column label &#39;item_id&#39; is not unique.</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Recommender method</span>
@@ -14823,6 +14797,68 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">MergeError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-18-9ffc5d3e5f45&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># Recommender method</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span>recommendations <span class="ansi-blue-fg">=</span> cb_user_item_recommender<span class="ansi-blue-fg">.</span>recommend<span class="ansi-blue-fg">(</span>pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> columns<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> interactions_df<span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">10</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> recommendations <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>recommendations<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">,</span> how<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;left&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> display<span class="ansi-blue-fg">(</span>HTML<span class="ansi-blue-fg">(</span>recommendations<span class="ansi-blue-fg">.</span>to_html<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">recommend</span><span class="ansi-blue-fg">(self, users_df, items_df, n_recommendations)</span>
+<span class="ansi-green-intense-fg ansi-bold">    102</span>         <span class="ansi-green-fg">for</span> ix<span class="ansi-blue-fg">,</span> user <span class="ansi-green-fg">in</span> users_df<span class="ansi-blue-fg">.</span>iterrows<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    103</span> 
+<span class="ansi-green-fg">--&gt; 104</span><span class="ansi-red-fg">             </span>users_df<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>items_df<span class="ansi-blue-fg">,</span> how<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#39;cross&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span>             <span class="ansi-red-fg"># Create a Carthesian product of users from users_df and items from items_df</span>
+<span class="ansi-green-intense-fg ansi-bold">    106</span> 
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/frame.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(self, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">   7282</span>         <span class="ansi-green-fg">from</span> pandas<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>reshape<span class="ansi-blue-fg">.</span>merge <span class="ansi-green-fg">import</span> merge
+<span class="ansi-green-intense-fg ansi-bold">   7283</span> 
+<span class="ansi-green-fg">-&gt; 7284</span><span class="ansi-red-fg">         return merge(
+</span><span class="ansi-green-intense-fg ansi-bold">   7285</span>             self<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">   7286</span>             right<span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
+<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
+</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">    618</span>             warnings<span class="ansi-blue-fg">.</span>warn<span class="ansi-blue-fg">(</span>msg<span class="ansi-blue-fg">,</span> UserWarning<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    619</span> 
+<span class="ansi-green-fg">--&gt; 620</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>_validate_specification<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    621</span> 
+<span class="ansi-green-intense-fg ansi-bold">    622</span>         <span class="ansi-red-fg"># note this function has side effects</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_validate_specification</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1189</span>                 common_cols <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>left<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">.</span>intersection<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>right<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1190</span>                 <span class="ansi-green-fg">if</span> len<span class="ansi-blue-fg">(</span>common_cols<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1191</span><span class="ansi-red-fg">                     raise MergeError(
+</span><span class="ansi-green-intense-fg ansi-bold">   1192</span>                         <span class="ansi-blue-fg">&#34;No common columns to perform merge on. &#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">   1193</span>                         <span class="ansi-blue-fg">&#34;Merge options: left_on={lon}, right_on={ron}, &#34;</span>
+
+<span class="ansi-red-fg">MergeError</span>: No common columns to perform merge on. Merge options: left_on=None, right_on=None, left_index=False, right_index=False</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -14833,7 +14869,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">evaluation_and_testing.testing</span> <span class="kn">import</span> <span class="n">evaluate_train_test_split_implicit</span>
@@ -14848,7 +14884,7 @@ Code the content-based recommender. User features should be calculated within th
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">hyperopt</span> <span class="kn">import</span> <span class="n">hp</span><span class="p">,</span> <span class="n">fmin</span><span class="p">,</span> <span class="n">tpe</span><span class="p">,</span> <span class="n">Trials</span>
@@ -14924,7 +14960,7 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -14942,10 +14978,94 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/10 [00:00&lt;?, ?trial/s, best loss=?]</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>job exception: The column label &#39;item_id&#39; is not unique.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/10 [00:00&lt;?, ?trial/s, best loss=?]
+Best parameters:
+None
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Traceback (most recent call last):
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
+    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
+    return trials.fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
+    return fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
+    rval.exhaust()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
+    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
+    self.serial_evaluate()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
+    result = self.domain.evaluate(spec, ctrl)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
+    rval = self.fn(pyll_rval)
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
+    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
+  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
+    recommender.fit(interactions_df_train, None, items_df)
+  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
+    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
+    op = _MergeOperation(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
+    ) = self._get_merge_keys()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
+    right_keys.append(right._get_label_or_level_values(rk))
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
+    raise ValueError(
+ValueError: The column label &#39;item_id&#39; is not unique.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -14964,10 +15084,94 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>job exception: The column label &#39;item_id&#39; is not unique.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]
+Best parameters:
+None
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Traceback (most recent call last):
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
+    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
+    return trials.fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
+    return fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
+    rval.exhaust()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
+    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
+    self.serial_evaluate()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
+    result = self.domain.evaluate(spec, ctrl)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
+    rval = self.fn(pyll_rval)
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
+    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
+  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
+    recommender.fit(interactions_df_train, None, items_df)
+  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
+    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
+    op = _MergeOperation(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
+    ) = self._get_merge_keys()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
+    right_keys.append(right._get_label_or_level_values(rk))
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
+    raise ValueError(
+ValueError: The column label &#39;item_id&#39; is not unique.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">param_space</span> <span class="o">=</span> <span class="p">{</span>
@@ -14988,10 +15192,94 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>job exception: The column label &#39;item_id&#39; is not unique.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/100 [00:00&lt;?, ?trial/s, best loss=?]
+Best parameters:
+None
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Traceback (most recent call last):
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
+    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
+    return trials.fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
+    return fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
+    rval.exhaust()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
+    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
+    self.serial_evaluate()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
+    result = self.domain.evaluate(spec, ctrl)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
+    rval = self.fn(pyll_rval)
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
+    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
+  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
+    recommender.fit(interactions_df_train, None, items_df)
+  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
+    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
+    op = _MergeOperation(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
+    ) = self._get_merge_keys()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
+    right_keys.append(right._get_label_or_level_values(rk))
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
+    raise ValueError(
+ValueError: The column label &#39;item_id&#39; is not unique.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># This tuning may take around 12 hours</span>
@@ -15015,6 +15303,90 @@ Tune your models using the code below. You only need to put the class name of yo
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/300 [00:00&lt;?, ?trial/s, best loss=?]</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>job exception: The column label &#39;item_id&#39; is not unique.
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>  0%|          | 0/300 [00:00&lt;?, ?trial/s, best loss=?]
+Best parameters:
+None
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Traceback (most recent call last):
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 33, in tune_recommender
+    best_param_set = fmin(loss, space=param_space, algo=tpe.suggest,
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 507, in fmin
+    return trials.fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 682, in fmin
+    return fmin(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 553, in fmin
+    rval.exhaust()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 356, in exhaust
+    self.run(self.max_evals - n_done, block_until_done=self.asynchronous)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 292, in run
+    self.serial_evaluate()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/fmin.py&#34;, line 170, in serial_evaluate
+    result = self.domain.evaluate(spec, ctrl)
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/hyperopt/base.py&#34;, line 907, in evaluate
+    rval = self.fn(pyll_rval)
+  File &#34;&lt;ipython-input-20-164530239fdf&gt;&#34;, line 23, in loss
+    hr1, hr3, hr5, hr10, ndcg1, ndcg3, ndcg5, ndcg10 = evaluate_train_test_split_implicit(
+  File &#34;/home/johny/Pulpit/REK/project1/evaluation_and_testing/testing.py&#34;, line 93, in evaluate_train_test_split_implicit
+    recommender.fit(interactions_df_train, None, items_df)
+  File &#34;&lt;ipython-input-15-37c9e76d6fc0&gt;&#34;, line 68, in fit
+    interactions_df = pd.merge(interactions_df, items_df, on=[&#39;item_id&#39;])
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 73, in merge
+    op = _MergeOperation(
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 627, in __init__
+    ) = self._get_merge_keys()
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py&#34;, line 983, in _get_merge_keys
+    right_keys.append(right._get_label_or_level_values(rk))
+  File &#34;/home/johny/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py&#34;, line 1708, in _get_label_or_level_values
+    raise ValueError(
+ValueError: The column label &#39;item_id&#39; is not unique.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -15027,7 +15399,7 @@ Run the final evaluation of your recommender and present its results against the
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cb_user_item_recommender</span> <span class="o">=</span> <span class="n">LinearRegressionCBUIRecommender</span><span class="p">(</span>
@@ -15044,6 +15416,75 @@ Run the final evaluation of your recommender and present its results against the
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-89e69fdf413f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> 
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-red-fg"># Give the name of your recommender in the line below</span>
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> linear_cbui_tts_results = [[&#39;LinearRegressionCBUIRecommender&#39;] + list(evaluate_train_test_split_implicit(
+</span><span class="ansi-green-intense-fg ansi-bold">      6</span>     cb_user_item_recommender, interactions_df, items_df))]
+<span class="ansi-green-intense-fg ansi-bold">      7</span> 
+
+<span class="ansi-green-fg">~/Pulpit/REK/project1/evaluation_and_testing/testing.py</span> in <span class="ansi-cyan-fg">evaluate_train_test_split_implicit</span><span class="ansi-blue-fg">(recommender, interactions_df, items_df, seed)</span>
+<span class="ansi-green-intense-fg ansi-bold">     91</span>     <span class="ansi-red-fg"># Train the recommender</span>
+<span class="ansi-green-intense-fg ansi-bold">     92</span> 
+<span class="ansi-green-fg">---&gt; 93</span><span class="ansi-red-fg">     </span>recommender<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>interactions_df_train<span class="ansi-blue-fg">,</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     94</span> 
+<span class="ansi-green-intense-fg ansi-bold">     95</span>     <span class="ansi-red-fg"># Make recommendations for each user in the test set and calculate the metric</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-15-37c9e76d6fc0&gt;</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, interactions_df, users_df, items_df)</span>
+<span class="ansi-green-intense-fg ansi-bold">     66</span>         <span class="ansi-red-fg"># Get the input data for the model</span>
+<span class="ansi-green-intense-fg ansi-bold">     67</span>         interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> users_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;user_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 68</span><span class="ansi-red-fg">         </span>interactions_df <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>merge<span class="ansi-blue-fg">(</span>interactions_df<span class="ansi-blue-fg">,</span> items_df<span class="ansi-blue-fg">,</span> on<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;item_id&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     69</span> 
+<span class="ansi-green-intense-fg ansi-bold">     70</span>         x <span class="ansi-blue-fg">=</span> interactions_df<span class="ansi-blue-fg">.</span>loc<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">,</span> user_features <span class="ansi-blue-fg">+</span> item_features<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>values
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">merge</span><span class="ansi-blue-fg">(left, right, how, on, left_on, right_on, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>     validate<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span> ) -&gt; &#34;DataFrame&#34;:
+<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">     op = _MergeOperation(
+</span><span class="ansi-green-intense-fg ansi-bold">     74</span>         left<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     75</span>         right<span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, left, right, how, on, left_on, right_on, axis, left_index, right_index, sort, suffixes, copy, indicator, validate)</span>
+<span class="ansi-green-intense-fg ansi-bold">    625</span>             self<span class="ansi-blue-fg">.</span>right_join_keys<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">    626</span>             self<span class="ansi-blue-fg">.</span>join_names<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-fg">--&gt; 627</span><span class="ansi-red-fg">         ) = self._get_merge_keys()
+</span><span class="ansi-green-intense-fg ansi-bold">    628</span> 
+<span class="ansi-green-intense-fg ansi-bold">    629</span>         <span class="ansi-red-fg"># validate the merge keys dtypes. We may need to coerce</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/reshape/merge.py</span> in <span class="ansi-cyan-fg">_get_merge_keys</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    981</span>                     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_rkey<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    982</span>                         <span class="ansi-green-fg">if</span> rk <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 983</span><span class="ansi-red-fg">                             </span>right_keys<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>right<span class="ansi-blue-fg">.</span>_get_label_or_level_values<span class="ansi-blue-fg">(</span>rk<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    984</span>                         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    985</span>                             <span class="ansi-red-fg"># work-around for merge_asof(right_index=True)</span>
+
+<span class="ansi-green-fg">~/anaconda3/lib/python3.8/site-packages/pandas/core/generic.py</span> in <span class="ansi-cyan-fg">_get_label_or_level_values</span><span class="ansi-blue-fg">(self, key, axis)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1706</span> 
+<span class="ansi-green-intense-fg ansi-bold">   1707</span>             label_axis_name <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">&#34;column&#34;</span> <span class="ansi-green-fg">if</span> axis <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span> <span class="ansi-green-fg">else</span> <span class="ansi-blue-fg">&#34;index&#34;</span>
+<span class="ansi-green-fg">-&gt; 1708</span><span class="ansi-red-fg">             raise ValueError(
+</span><span class="ansi-green-intense-fg ansi-bold">   1709</span>                 (
+<span class="ansi-green-intense-fg ansi-bold">   1710</span>                     <span class="ansi-blue-fg">f&#34;The {label_axis_name} label &#39;{key}&#39; &#34;</span>
+
+<span class="ansi-red-fg">ValueError</span>: The column label &#39;item_id&#39; is not unique.</pre>
+</div>
+</div>
+
 </div>
 </div>
 
